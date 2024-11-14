@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Attendance System</h1>
+      <button id="darkModeToggle">🌙 Dark Mode</button>
+    </div>
+
+    <div class="student-list">
+      <form id="attendanceForm">
+        <div class="row header">
+          <span>#</span>
+          <span>Name</span>
+          <span>Roll No.</span>
+          <span>Status</span>
+        </div>
+        <div id="studentsContainer"></div>
+        <button type="button" onclick="addStudentRow()" class="add-student-button">Add Student</button>
+        <button type="button" onclick="submitAttendance()" class="submit-button">Save Attendance</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+</body>
+</html>
+
