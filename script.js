@@ -91,3 +91,31 @@ function generateExcel(students) {
 
 // Load students on page load
 document.addEventListener('DOMContentLoaded', loadStudents);
+/* For mobile screens */
+@media (max-width: 600px) {
+  .container {
+    width: 90%;
+    padding: 10px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  #studentsContainer .row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #studentsContainer .row span,
+  #studentsContainer .row input {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .status-buttons {
+    display: flex;
+    justify-content: flex-start;
+  }
+}
