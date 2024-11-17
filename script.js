@@ -49,6 +49,7 @@ function addStudentRow(student = {}, rowIndex) {
   `;
 
   studentsContainer.appendChild(row);
+  updateRowNumbers();
 }
 
 // Set attendance status
@@ -66,13 +67,16 @@ function setStatus(button, status) {
   });
 }
 
-// Delete a student row
+// Delete a student row with confirmation
 function deleteRow(button) {
-  button.parentElement.remove();
-  updateRowNumbers();
+  const confirmDelete = confirm("Are you sure you want to delete this student?");
+  if (confirmDelete) {
+    button.parentElement.remove();
+    updateRowNumbers();
+  }
 }
 
-// Update row numbers after deletion
+// Update row numbers after deletion or addition
 function updateRowNumbers() {
   const rows = document.querySelectorAll('.row');
   rows.forEach((row, index) => {
@@ -124,7 +128,15 @@ function generateExcel(students) {
   }));
   const worksheet = XLSX.utils.json_to_sheet(worksheetData);
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance');
-  XLSX.writeFile(workbook, `Attendance_${new Date().toISOString().split('T')[0]}.xlsx`);
+  const fileName = `Attendance_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+  // Trigger download for both desktop and mobile
+  if (navigator.msSaveOrOpenBlob) { // For IE
+    const blob = new Blob([XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    navigator.msSaveOrOpenBlob(blob, fileName);
+  } else {
+    XLSX.writeFile(workbook, fileName);
+  }
 }
 
 // Add a new blank row
