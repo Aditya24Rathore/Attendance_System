@@ -1,4 +1,11 @@
-/* Container and basic styling */
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling */
 body, html {
   font-family: Arial, sans-serif;
   background-color: #222020;
@@ -9,19 +16,38 @@ body, html {
   height: 100vh;
 }
 
+/* Main Container */
 .container {
-  width: 400px;
+  width: 90%;
+  max-width: 600px; /* Limit width on larger screens */
   padding: 20px;
   background-color: #333;
   border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 }
 
+.header h1 {
+  font-size: 20px;
+}
+
+#darkModeToggle {
+  cursor: pointer;
+  background-color: #4CAF50;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+}
+
+/* Student List */
 .student-list {
   margin-top: 20px;
 }
@@ -29,38 +55,102 @@ body, html {
 .row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 8px 0;
+  border-bottom: 1px solid #555;
 }
 
-.header span {
-  font-weight: bold;
-}
-
-.add-student-button, .submit-button {
+.row input {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: #4CAF50;
+  margin-right: 10px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #222;
   color: white;
+}
+
+.row span {
+  flex: 1;
+  text-align: center;
+}
+
+.row .status-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  font-size: 14px;
+  padding: 8px 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.add-student-button {
-  background-color: #46ba0c;
-}
-
+/* Present and Absent Buttons */
 button.present {
   background-color: #2E7D32;
+  color: white;
 }
 
 button.absent {
   background-color: #D32F2F;
+  color: white;
 }
 
-/* Dark Mode Styling */
-.dark-mode {
-  background-color: #121212;
-  color: #f0f0f0;
+button.present:hover {
+  background-color: #4CAF50;
+}
+
+button.absent:hover {
+  background-color: #E57373;
+}
+
+/* Add Student & Submit Buttons */
+.add-student-button, .submit-button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #46ba0c;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+.add-student-button:hover, .submit-button:hover {
+  background-color: #4CAF50;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  .header h1 {
+    font-size: 18px;
+  }
+
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .row input {
+    width: calc(100% - 20px);
+    margin-bottom: 5px;
+  }
+
+  .row .status-buttons {
+    justify-content: flex-start;
+  }
+
+  button {
+    width: 100%;
+    font-size: 14px;
+  }
 }
