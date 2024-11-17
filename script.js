@@ -1,8 +1,20 @@
-// Toggle Dark Mode
+// Toggle Dark Mode with persistence
 const darkModeToggle = document.getElementById('darkModeToggle');
 darkModeToggle.addEventListener('click', () => {
   document.body.classList.toggle('dark-mode');
-  darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  darkModeToggle.textContent = isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
+  localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+});
+
+// Load Dark Mode state
+document.addEventListener('DOMContentLoaded', () => {
+  const darkModeState = localStorage.getItem('darkMode');
+  if (darkModeState === 'enabled') {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.textContent = '☀️ Light Mode';
+  }
+  loadStudents();
 });
 
 // Load students from Local Storage
@@ -33,7 +45,9 @@ function addStudentRow(student = {}, rowIndex) {
       <button type="button" class="absent" onclick="setStatus(this, 'Absent')">Absent</button>
       <input type="hidden" class="status" value="${student.status || ''}">
     </div>
+    <button class="delete-row" onclick="deleteRow(this)">❌</button>
   `;
+
   studentsContainer.appendChild(row);
 }
 
@@ -52,21 +66,45 @@ function setStatus(button, status) {
   });
 }
 
+// Delete a student row
+function deleteRow(button) {
+  button.parentElement.remove();
+  updateRowNumbers();
+}
+
+// Update row numbers after deletion
+function updateRowNumbers() {
+  const rows = document.querySelectorAll('.row');
+  rows.forEach((row, index) => {
+    row.querySelector('span').textContent = index + 1;
+  });
+}
+
 // Collect attendance data and generate Excel
 function submitAttendance() {
   const studentsContainer = document.getElementById('studentsContainer');
   const rows = studentsContainer.querySelectorAll('.row');
   const students = [];
 
+  let hasErrors = false;
   rows.forEach(row => {
-    const name = row.querySelector('input[placeholder="Name"]').value;
-    const rollNo = row.querySelector('input[placeholder="Roll No."]').value;
+    const name = row.querySelector('input[placeholder="Name"]').value.trim();
+    const rollNo = row.querySelector('input[placeholder="Roll No."]').value.trim();
     const status = row.querySelector('.status').value;
 
-    if (name && rollNo) {
+    if (!name || !rollNo) {
+      row.style.backgroundColor = '#FFCDD2'; // Highlight error
+      hasErrors = true;
+    } else {
+      row.style.backgroundColor = ''; // Clear error
       students.push({ name, rollNo, status });
     }
   });
+
+  if (hasErrors) {
+    alert('Please fill in all required fields!');
+    return;
+  }
 
   // Save the students list to Local Storage
   saveStudents(students);
@@ -87,6 +125,11 @@ function generateExcel(students) {
   const worksheet = XLSX.utils.json_to_sheet(worksheetData);
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance');
   XLSX.writeFile(workbook, `Attendance_${new Date().toISOString().split('T')[0]}.xlsx`);
+}
+
+// Add a new blank row
+function addNewStudent() {
+  addStudentRow();
 }
 
 // Load students on page load
